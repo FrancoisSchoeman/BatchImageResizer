@@ -4,4 +4,4 @@
 The program resizes all images inside a folder to match a specific width. You can resize in any supported format, and type in a custom title for the images.
 
 ### Requirements
-Pillow | pip install Pillow
+- Pillow | `pip install Pillow`
