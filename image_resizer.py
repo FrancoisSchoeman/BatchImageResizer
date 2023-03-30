@@ -80,7 +80,7 @@ def resize():
 root = Tk()
 
 # TODO: THIS PROGRAM REQUIRES AWTHEMES 10.3.2 | Add your absolute path to the awthemes folder
-root.tk.call('lappend', 'auto_path', 'C:/Users/Francois Schoeman/Desktop/Python/Finished/0 - Practice/image_resizer/awthemes-10.3.2')
+root.tk.call('lappend', 'auto_path', 'C:/Users/path/to/your/awthemes-10.3.2')
 root.tk.call('package', 'require', 'awdark')
 
 s = tkinter.ttk.Style()
