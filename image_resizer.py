@@ -27,7 +27,7 @@ def resize():
     basewidth = int(size_entry.get())
     n = 0
     for item in dirs:
-        if os.path.isfile(path + item):
+        if item != "desktop.ini" and os.path.isfile(path + item):
             im = ImagePIL.open(path + item)
 
             if im.size[0] < im.size[1]:
@@ -46,8 +46,8 @@ def resize():
                     og_name = item.split(".")
 
                     if name_entry.get() == "":
-                        final_img.save(fr"{path}({n}) {og_name[0]}.{img_format}", f'{img_format.upper()}',
-                                       quality=90)
+                        final_img.save(fr"{path}{og_name[0]} ({n}).{img_format}", f'{img_format.upper()}',
+                                    quality=90)
                     else:
                         final_img.save(fr"{path}{name_entry.get()} ({n}).{img_format}", f'{img_format.upper()}',
                                         quality=90)
@@ -65,7 +65,7 @@ def resize():
                     og_name = item.split(".")
 
                     if name_entry.get() == '':
-                        img_resize.save(fr"{path}({n}) {og_name[0]}.{img_format}", f'{img_format.upper()}',
+                        img_resize.save(fr"{path}{og_name[0]} ({n}).{img_format}", f'{img_format.upper()}',
                                         quality=90)
                     else:
                         img_resize.save(fr"{path}{name_entry.get()} ({n}).{img_format}", f'{img_format.upper()}', quality=90)
@@ -80,7 +80,7 @@ def resize():
 root = Tk()
 
 # TODO: THIS PROGRAM REQUIRES AWTHEMES 10.3.2 | Add your absolute path to the awthemes folder
-root.tk.call('lappend', 'auto_path', 'Path/to/your/theme/image_resizer/awthemes-10.3.2')
+root.tk.call('lappend', 'auto_path', 'C:/Users/Francois Schoeman/Desktop/Python/Finished/0 - Practice/image_resizer/awthemes-10.3.2')
 root.tk.call('package', 'require', 'awdark')
 
 s = tkinter.ttk.Style()
