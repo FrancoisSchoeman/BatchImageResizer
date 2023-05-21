@@ -27,51 +27,61 @@ def resize():
     basewidth = int(size_entry.get())
     n = 0
     for item in dirs:
-        if item != "desktop.ini" and os.path.isfile(path + item):
-            im = ImagePIL.open(path + item)
+        if os.path.isfile(path + item):
+            try:
+                im = ImagePIL.open(path + item)
+            except IOError:
+                print(f"Error: {item} is not an image file.")
+                continue
 
             if im.size[0] < im.size[1]:
-                transposed = im.transpose(ImagePIL.ROTATE_270)
+                img_resize = resize_landscape(im, basewidth)
+                n += 1
+                final_img = img_resize.transpose(ImagePIL.ROTATE_90)
 
-                wpercent = (basewidth / float(transposed.size[0]))
-                hsize = int((float(transposed.size[1]) * float(wpercent)))
-                if basewidth != transposed.size[0]:
-                    if basewidth > float(transposed.size[0]):
-                        img_resize = transposed.resize((basewidth, hsize), ImagePIL.BOX)
-                    elif basewidth < float(transposed.size[0]):
-                        img_resize = transposed.resize((basewidth, hsize), ImagePIL.ANTIALIAS)
-                    n += 1
-                    final_img = img_resize.transpose(ImagePIL.ROTATE_90)
-
-                    og_name = item.split(".")
-
-                    if name_entry.get() == "":
-                        final_img.save(fr"{path}{og_name[0]} ({n}).{img_format}", f'{img_format.upper()}',
-                                    quality=90)
-                    else:
-                        final_img.save(fr"{path}{name_entry.get()} ({n}).{img_format}", f'{img_format.upper()}',
-                                        quality=90)
+                og_name = item.split(".")
+                save_image(final_img, og_name, n)
 
             elif im.size[0] > im.size[1] or im.size[0] == im.size[1]:
-                wpercent = (basewidth / float(im.size[0]))
-                hsize = int((float(im.size[1]) * float(wpercent)))
-                if basewidth != im.size[0]:
-                    if basewidth > float(im.size[0]):
-                        img_resize = im.resize((basewidth, hsize), ImagePIL.BOX)
-                    elif basewidth < float(im.size[0]):
-                        img_resize = im.resize((basewidth, hsize), ImagePIL.ANTIALIAS)
-                    n += 1
+                img_resize = resize_portrait(im, basewidth)
+                save_image(img_resize, item.split("."), n)
+    
+    messagebox.showinfo("Success", "Images Resized Successfully, Check Your Folder")
 
-                    og_name = item.split(".")
 
-                    if name_entry.get() == '':
-                        img_resize.save(fr"{path}{og_name[0]} ({n}).{img_format}", f'{img_format.upper()}',
-                                        quality=90)
-                    else:
-                        img_resize.save(fr"{path}{name_entry.get()} ({n}).{img_format}", f'{img_format.upper()}', quality=90)
+def resize_landscape(im, basewidth):
+    transposed = im.transpose(ImagePIL.ROTATE_270)
+    wpercent = (basewidth / float(transposed.size[0]))
+    hsize = int((float(transposed.size[1]) * float(wpercent)))
+    if basewidth > float(transposed.size[0]):
+        img_resize = transposed.resize((basewidth, hsize), ImagePIL.BOX)
+    elif basewidth < float(transposed.size[0]):
+        img_resize = transposed.resize((basewidth, hsize), ImagePIL.ANTIALIAS)
+    return img_resize
 
-    return messagebox.showinfo(title="Image Resize Status", message="Image Resize Complete.\n"
-                                                                    "You Can Now Close The Program")
+
+def resize_portrait(im, basewidth):
+    wpercent = (basewidth / float(im.size[0]))
+    hsize = int((float(im.size[1]) * float(wpercent)))
+    if basewidth != im.size[0]:
+        img_resize = im.resize((basewidth, hsize), ImagePIL.ANTIALIAS)
+    return img_resize
+
+
+def save_image(img, og_name, n):
+    global img_format
+    try:
+        if name_entry.get() == "":
+            img.save(fr"{path}{og_name[0]} resized.{img_format}", f'{img_format.upper()}', quality=90)
+        else:
+            img.save(fr"{path}{name_entry.get()} ({n}).{img_format}", f'{img_format.upper()}', quality=90)
+    except OSError as e:
+        if img_format == "jpeg":
+            img_format = "png"
+            img = img.convert("RGB")
+            save_image(img, og_name, n)
+        else:
+            print("Error: Could not save image.")
 
 
 
