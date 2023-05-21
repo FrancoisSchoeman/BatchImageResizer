@@ -7,6 +7,3 @@ By simply leaving the Image Name field blank you can also resize the images whil
 ### Requirements
 - Pillow | `pip install Pillow`
 - AW Themes package for the dark theme
-
-### Caution
-Make sure that your folder only contains images, no other files are allowed (except folders within the main folder) and it will make the program crash. I have yet to fix this issue. I also need to do some heavy refactoring.
